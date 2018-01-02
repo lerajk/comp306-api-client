@@ -1,7 +1,7 @@
 
 
 <div style="text-align:center;">
-<p class="writing">Welcome Page</br>
+<p class="writing">Andre Oliveira and Leenoy Rajkhowa</p></br>
 
 <button type="button" class="update" id= "add" >Add Inventory Data</button> </br> </br>
 <button type="button" class="update" id= "show" >Discover Inventory</button>
@@ -10,13 +10,16 @@
 
 
 <script type="text/javascript">
+
+	var url = 'https://api-project-client.herokuapp.com/'; //http://localhost:3000';
 	// go to add page
     document.getElementById("add").onclick = function () {
-        window.location.href = 'http://localhost:3000/add';
+        window.location.href = url + '/add';
+        console.log(window.location.href);
     };
 
     //go to show page
     document.getElementById("show").onclick = function () {
-        window.location.href = 'http://localhost:3000/show';
+        window.location.href = url + '/show';
     };
 </script>

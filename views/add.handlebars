@@ -13,7 +13,7 @@
 <div class="form-style-2">
 <div class="form-style-2-heading">Add New Inventory Data</div>
 
-<form id= "form" method="post">
+<form id= "form" method="post" action="http://abatist3-eval-prod.apigee.net/api_proj_comp306">
 
 <label for="field1"><span>Product Name <span class="required">*</span> </span><input type="text" class="input-field" name="product"  /></label>
 
@@ -25,7 +25,7 @@
 
 <label for="field2"><span>Today's Date <span class="required">*</span> </span><input type="text" class="input-field" name="date"  /></label>
 
-<label><input type="submit" value="Submit" class ="update"/></label> 
+<label><input type= "submit" id ="add" value="Submit" class ="update"/></label> 
 <label><input type= "button" id ="cancel"  value="Cancel" class ="cancel"/></label> 
 </form>
 </div>
@@ -35,16 +35,19 @@
 
 <script type="text/javascript">
 
+var url_APP = 'https://api-project-client.herokuapp.com/'; //http://localhost:3000';
+var url_API = 'http://abatist3-eval-prod.apigee.net/api_proj_comp306';
 
 //cancel to go home page
  document.getElementById("cancel").onclick = function () {
-        window.location.href = 'http://localhost:3000';
+        window.location.href = url_APP;
     };
+
   
 //form validation with Jquery 
 $(document).ready(function () {
 
-    $('#form').validate({ // initialize the plugin
+    $('#form').validate({ 
         rules: {
             product: {
                 required: true,
@@ -81,5 +84,23 @@ $(document).ready(function () {
 });
 
 
+jQuery("#form").submit(function(e){
+    //The following stops the form from redirecting
+    e.preventDefault();
+
+   $.ajax({
+      url: url_API,
+       method: 'post',
+       dataType : 'json', // data type
+       data : $("#form").serialize()
+    }).then(function(res) { 
+
+    
+     window.location.href = url_APP ;
+
+    });
+
+
+}); 
 
 </script>

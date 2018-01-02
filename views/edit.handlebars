@@ -1,67 +1,52 @@
-<!doctype html>
-<html lang="en">
-
 <header>
 <link rel= "stylesheet" href="/stylesheets/bootstrap.css"/>
 <link rel= "stylesheet" href="/stylesheets/style.css"/>
+
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.8/jquery.validate.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
 </header>
+
 <body>
-
-
 <div class="container">
-
-
 
 <div class="form-style-2">
 <div class="form-style-2-heading">Update Inventory Data</div>
+<span id='errorMessageSpan' style='display:none; color: red; font-size: large;'></span>
 
-<form id= "form" action="http://localhost:3000/show" method="put">
+<form id= "form" >
 
-<label for="field1"><span>Product Name <span class="required">*</span> </span><input type="text" class="input-field" name="product_edit"  /></label>
+<label for="field1"><span>Product Name <span class="required">*</span> </span><input type="text" class="input-field" name="product"  id = "product"/></label>
 
-<label for="field2"><span>Price of Product <span class="required">*</span> </span><input type="text" class="input-field" name="price_edit" /></label>
+<label for="field2"><span>Price of Product <span class="required">*</span> </span><input type="text" class="input-field" name="price" id ="price"/></label>
 
-<label for="field2"><span>Quantity <span class="required">*</span> </span><input type="text" class="input-field" name="quantity_edit"  /></label>
+<label for="field2"><span>Quantity <span class="required">*</span> </span><input type="text" class="input-field" name="quantity" id = "quantity"  /></label>
 
-<label for="field5"><span>Description <span class="required">*</span></span> <textarea rows="4" cols="50" name="description_edit" class="textarea-field"></textarea></label>
+<label for="field5"><span>Description <span class="required">*</span></span> <textarea rows="4" cols="50" name="description" id ="description" class="textarea-field"></textarea></label>
 
-<label for="field2"><span>Today's Date <span class="required">*</span> </span><input type="text" class="input-field" name="date_edit"  /></label>
+<label for="field2"><span>Today's Date <span class="required">*</span> </span><input type="text" class="input-field" name="date"  id = "date" /></label>
 
-<label><input type = "submit" value="Edit" class ="update"/></label>
-<label><input type = "button" id ="cancel"  value="Cancel" class ="cancel"/></label>
+<label><input type= "submit" id ="add" value="Submit" class ="update"/></label> 
+<label><input type= "button" id ="cancel"  value="Cancel" class ="cancel"/></label> 
 </form>
 </div>
 
-</div>
+
+</div> <!-- Div of Container ends here --> 
 
 <script type="text/javascript">
 
-	editFunction();
+var url_APP = 'https://api-project-client.herokuapp.com/'; //'http://localhost:3000';
+var url_API = 'http://abatist3-eval-prod.apigee.net/api_proj_comp306';
 
-    function editFunction(){
+//cancel to go home page
+ document.getElementById("cancel").onclick = function () {
+        window.location.href = url_APP;
+    };
 
-      $(".update").click(function(e){
-        
-        var a = location.href; //'http://localhost:3000/add/:id';
-        var value = a.split('/')[4];
-        //console.log(value); 
 
-        $.ajax({
-          url: 'http://localhost:3000/add/' +  value,
-          method: 'put',
-          dataType : 'json', // data type
-          data : $("#form").serialize()
-          
-
-        }); //ajax call 
-      });//update JQuery    
-        
-    } // update function ends here
-
-//Form validation with Jquery 
+  
+//form validation with Jquery 
 $(document).ready(function () {
 
     $('#form').validate({ // initialize the plugin
@@ -96,46 +81,69 @@ $(document).ready(function () {
 
            }
 
-    });
-
-});
-
+    }); 
 
 // Pre populating the form 
-var b = location.href; //'http://localhost:3000/add/:id';
+var b = location.href; 
 var val = b.split('/')[4];
-//console.log('im the value: ' + val); 
 
 $.ajax({ 
 
-  url: 'http://localhost:3000/show/' +  val,
+  url: url_API +  '/' + val,
   method: 'GET',
   dataType: 'json'
 
 }).then(function(res){
-  var productName = res.product;
+  
+  var product = res.product;
   var price = res.price;
-  var quantity = res.content;
+  var quantity = res.quantity;
   var description = res.description;
   var date = res.date;
+  console.log(quantity);
 
-  document.getElementById("productName_edi").value = productName; 
-  document.getElementById("price_edit").value = price; 
-  document.getElementById("quantity_edit").value = quantity; 
-  document.getElementById("description_edit").value = description; 
-  document.getElementById("date_edit").value = date; 
+  document.getElementById("product").value = product; 
+  document.getElementById("price").value = price; 
+  document.getElementById("quantity").value = quantity; 
+  document.getElementById("description").value = description; 
+  document.getElementById("date").value = date; 
 
-}); //ajaxcallends
+}); //ajaxcallends 
 
+    $("#form").submit(function(e){
 
+      var current_url = location.href; 
+      var value = current_url.split('/')[4];
+      //The following stops the form from redirecting
+      e.preventDefault();
 
-  //cancel go to show page 
- document.getElementById("cancel").onclick = function () {
-        window.location.href = 'http://localhost:3000/show';
-    };
-	
+      // hide the error msg
+      $('#errorMessageSpan').css('display','none');
 
+      // if fields are not valid, do not submit
+      var isValid = $(this).valid();
+      if(!isValid) {
+        return;
+      } else {
+        // If all is valid, Make POST request
+        $.ajax({
+            url: url_API +  '/' + value,
+            method: 'PUT',
+            dataType: 'json',
+            data: $('form').serialize()
+          }).then(function(res) { 
+            alert('Item updated succesfully!');
+            window.location.href = url_APP + '/show';
+          },function(err) {
+            alert('Item could not be updated, please check the fields and try again!');
+
+            // show the error msg
+            $('#errorMessageSpan').css('display','block');
+            $('#errorMessageSpan').text(err.responseText);
+        }); 
+      }
+  });
+
+});
 
 </script>
-</body>
-</html>

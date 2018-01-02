@@ -16,8 +16,12 @@
 
 <script>
 
+
+   var url_API = 'http://abatist3-eval-prod.apigee.net/api_proj_comp306';
+   var url_App = 'https://api-project-client.herokuapp.com/'; //http://localhost:3000';
+
 	$.ajax({
-	  url: 'http://localhost:3000/showapi',
+	  url: url_API,
 	  method: 'GET',
 	  dataType: 'json'
 	}).then(function(res) {
@@ -32,8 +36,8 @@
           var date = (res[i].date);
 
           $(".letsgo").append(
-          	"<div id=" + id + " class='accordianOpen'> " + "<h2 class='accordionItemHeading'>" + product + " by " + price + "</h2>" +
-           	"<div class='accordionItemContent'><div class='textareadisplay'><textarea readonly rows='4' cols='90'>" + description + "</textarea></div>" + " <button id = " + id + " class='update'>Update</button> <button id = " + id + " class='delete'>Delete</button>" + '<div class ="tag"><span class="w3-tag w3-round w3-teal w3-border w3-border-white w3-large" align="right">' + "#" + date + "</span></div>" +
+          	"<div id=" + id + " class='accordianOpen'> " + "<h2 class='accordionItemHeading'>" + "Product Name: " + product + "</h2>" +
+           	"<div class='accordionItemContent'><div class='textareadisplay'><textarea readonly rows='4' cols='90'>" + description + "</textarea></div>" + " <button id = " + id + " class='update'>Update</button> <button id = " + id + " class='delete'>Delete</button>" + '<div class ="tag"><span class="w3-tag w3-round w3-teal w3-border w3-border-white w3-large" align="right">' + date + "</span></div>" + '<div class ="tag"><span class="w3-tag w3-round w3-teal w3-border w3-border-white w3-large" align="right">' + "Price: $" + price + "</span></div>" + '<div class ="tag"><span class="w3-tag w3-round w3-teal w3-border w3-border-white w3-large" align="right">' + "In Stock: " + quantity + "</span></div>" +
            	"</div> </div>"
 
         	 ); //append ends    
@@ -46,20 +50,21 @@
       
 	});
 
+
 	 function deleteFunction(){
 
     $(".delete").click(function(e){
        
-       if (confirm('Delete this Data ?')) {
+       if (confirm('Delete this Data?')) {
 
         e.preventDefault();
         var thisId = $(this).attr("id");
-        //console.log(thisId);
-        window.location.href = 'http://localhost:3000/show';
+        console.log(thisId);
+        window.location.href = url_App + '/show';
 
         //activate ajax call
         $.ajax({
-              url: 'http://localhost:3000/show/' + thisId,
+              url: url_API + '/' + thisId,
               method: 'DELETE'       
             }); // ajax call
 
@@ -72,18 +77,17 @@
       }); //.delete class click function 
 	           
 
-          } //delete funtion ends
+  } //delete funtion ends
 
     function updateFunction(){
 
       $(".update").click(function(e){
         e.preventDefault();
         var thisID = $(this).attr("id");
-        console.log(thisID);
-        location.href = 'http://localhost:3000/add/' + thisID;
+        location.href = url_App + '/edit/' + thisID;
 
         $.ajax({
-          url: 'http://localhost:3000/add/' + thisID,
+          url: url_API  + thisID,
           method: 'GET' // this method was PUT
         }); //ajax call 
       });//update JQuery
@@ -95,7 +99,7 @@
 
   //cancel go to root 
  document.getElementById("cancel").onclick = function () {
-        window.location.href = 'http://localhost:3000';
+        window.location.href = url_App;
     };
 
 
