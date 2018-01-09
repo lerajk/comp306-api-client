@@ -37,11 +37,12 @@
 <script type="text/javascript">
 
 var url_APP = 'http://localhost:3000';
-var url_API = 'http://abatist3-eval-prod.apigee.net/api_proj_comp306';
+var url_API = 'https://abatist3-eval-prod.apigee.net/api_proj_comp306';
+var API_KEY = '&apikey=lLp1I3ucA5UWHVcCz6W7d7GzAyEcmzfS'
 
 //cancel to go home page
  document.getElementById("cancel").onclick = function () {
-        window.location.href = url_APP;
+        window.location.href = url_APP + '/show';
     };
 
 
@@ -85,11 +86,11 @@ $(document).ready(function () {
 
 // Pre populating the form 
 var b = location.href; 
-var val = b.split('/')[4];
+var val = b.split('/')[4].split('?')[0];
 
 $.ajax({ 
 
-  url: url_API +  '/' + val,
+  url: url_API +  '/' + val + '?' + API_KEY,
   method: 'GET',
   dataType: 'json'
 
@@ -113,7 +114,7 @@ $.ajax({
     $("#form").submit(function(e){
 
       var current_url = location.href; 
-      var value = current_url.split('/')[4];
+      var value = current_url.split('/')[4].split('?')[0];
       //The following stops the form from redirecting
       e.preventDefault();
 
@@ -127,7 +128,7 @@ $.ajax({
       } else {
         // If all is valid, Make POST request
         $.ajax({
-            url: url_API +  '/' + value,
+            url: url_API +  '/' + value + '?' + API_KEY,
             method: 'PUT',
             dataType: 'json',
             data: $('form').serialize()

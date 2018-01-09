@@ -17,11 +17,12 @@
 <script>
 
 
-   var url_API = 'http://abatist3-eval-prod.apigee.net/api_proj_comp306';
+   var url_API = 'https://abatist3-eval-prod.apigee.net/api_proj_comp306';
    var url_App = 'http://localhost:3000';
+   var API_KEY = '&apikey=lLp1I3ucA5UWHVcCz6W7d7GzAyEcmzfS'
 
 	$.ajax({
-	  url: url_API,
+	  url: url_API + '?' + API_KEY,
 	  method: 'GET',
 	  dataType: 'json'
 	}).then(function(res) {
@@ -60,12 +61,13 @@
         e.preventDefault();
         var thisId = $(this).attr("id");
         console.log(thisId);
-        window.location.href = url_App + '/show';
 
         //activate ajax call
         $.ajax({
-              url: url_API + '/' + thisId,
+              url: url_API + '/' + thisId + '?' + API_KEY,
               method: 'DELETE'       
+            }).then(function(res){
+              window.location.href = url_App + '/show';
             }); // ajax call
 
       } else {
@@ -84,7 +86,7 @@
       $(".update").click(function(e){
         e.preventDefault();
         var thisID = $(this).attr("id");
-        location.href = url_App + '/edit/' + thisID;
+        location.href = url_App + '/edit/' + thisID + '?' + API_KEY;
 
         $.ajax({
           url: url_API  + thisID,
